@@ -7,8 +7,8 @@
 
 typedef enum {
   TK_RESERVED, // symbol
-  TK_NUM, // integer
-  TK_EOF, // end of file
+  TK_NUM,      // integer
+  TK_EOF,      // end of file
 } TokenKind;
 
 typedef struct Token Token;
@@ -76,15 +76,14 @@ void expect(char op) {
 
 int expect_number() {
   if (token->kind != TK_NUM)
-    error_at(token->str, "Number is expected, but got a different kind of token.");
+    error_at(token->str,
+             "Number is expected, but got a different kind of token.");
   int val = token->val;
   token = token->next;
   return val;
 }
 
-bool at_eof() {
-  return token-> kind == TK_EOF;
-}
+bool at_eof() { return token->kind == TK_EOF; }
 
 Token *new_token(TokenKind kind, Token *cur, char *str) {
   Token *tok = calloc(1, sizeof(Token));
@@ -106,7 +105,8 @@ Token *tokenize() {
       continue;
     }
 
-    if (*p == '+' || *p == '-' || *p == '*' || *p == '/' || *p == '(' || *p == ')') {
+    if (*p == '+' || *p == '-' || *p == '*' || *p == '/' || *p == '(' ||
+        *p == ')') {
       cur = new_token(TK_RESERVED, cur, p++);
       continue;
     }
@@ -165,7 +165,7 @@ Node *unary() {
 Node *mul() {
   Node *node = unary();
 
-  for(;;) {
+  for (;;) {
     if (consume('*'))
       node = new_node(ND_MUL, node, unary());
     else if (consume('/'))
@@ -201,19 +201,19 @@ void gen(Node *node) {
   printf("  pop rax\n");
 
   switch (node->kind) {
-    case ND_ADD:
-      printf("  add rax, rdi\n");
-      break;
-    case ND_SUB:
-      printf("  sub rax, rdi\n");
-      break;
-    case ND_MUL:
-      printf("  imul rax, rdi\n");
-      break;
-    case ND_DIV:
-      printf("  cqo\n");
-      printf("  idiv rdi\n");
-      break;
+  case ND_ADD:
+    printf("  add rax, rdi\n");
+    break;
+  case ND_SUB:
+    printf("  sub rax, rdi\n");
+    break;
+  case ND_MUL:
+    printf("  imul rax, rdi\n");
+    break;
+  case ND_DIV:
+    printf("  cqo\n");
+    printf("  idiv rdi\n");
+    break;
   }
 
   printf("  push rax\n");
@@ -229,7 +229,6 @@ int main(int argc, char **argv) {
   token = tokenize();
   Node *node = expr();
 
-
   printf(".intel_syntax noprefix\n");
   printf(".global main\n");
   printf("main:\n");
@@ -238,5 +237,6 @@ int main(int argc, char **argv) {
 
   printf("  pop rax\n");
   printf("  ret\n");
+
   return 0;
 }
