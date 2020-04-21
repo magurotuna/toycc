@@ -296,6 +296,8 @@ void gen(Node *node) {
     printf("  setle al\n");
     printf("  movzb rax, al\n");
     break;
+  default:
+    error("Error happened when generating assembly.");
   }
 
   printf("  push rax\n");
