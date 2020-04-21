@@ -1,6 +1,11 @@
 CFLAGSSS=-std=c11 -g -static
+SRCS=$(wildcard *.c)
+OBJS=$(SRCS:.c=.o)
 
-toycc: toycc.c
+toycc: $(OBJS)
+	$(CC) -o toycc $(OBJS) $(LDFLAGS)
+
+$(OBJS): toycc.h
 
 test: toycc
 	./test.sh
