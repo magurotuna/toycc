@@ -27,6 +27,16 @@ void error_at(char *loc, char *fmt, ...) {
   exit(1);
 }
 
+void print_token() {
+  for (Token *tok = token; tok; tok = tok->next) {
+    char *ident = malloc(tok->len + sizeof(char));
+    strncpy(ident, tok->str, tok->len);
+    printf("kind: %d\tval: %d\tident: %s\tlen: %d\n", tok->kind, tok->val,
+           ident, tok->len);
+    free(ident);
+  }
+}
+
 bool consume(char *op) {
   if (token->kind != TK_RESERVED || strlen(op) != token->len ||
       memcmp(token->str, op, token->len))
@@ -103,7 +113,13 @@ void tokenize() {
     }
 
     if ('a' <= *p && *p <= 'z') {
-      cur = new_token(TK_IDENT, cur, &p, 1);
+      int len = 1;
+      char next = *(p + len);
+      while ('a' <= next && next <= 'z') {
+        len++;
+        next = *(p + len);
+      }
+      cur = new_token(TK_IDENT, cur, &p, len);
       continue;
     }
 
@@ -235,9 +251,28 @@ Node *primary() {
   if (tok) {
     Node *node = calloc(1, sizeof(Node));
     node->kind = ND_LVAR;
-    node->offset = (tok->str[0] - 'a' + 1) * 8;
+
+    LVar *lvar = find_lvar(tok);
+    if (lvar) {
+      node->offset = lvar->offset;
+    } else {
+      lvar = calloc(1, sizeof(LVar));
+      lvar->next = locals;
+      lvar->name = tok->str;
+      lvar->len = tok->len;
+      lvar->offset = locals ? locals->offset + 8 : 0;
+      node->offset = lvar->offset;
+      locals = lvar;
+    }
     return node;
   }
 
   return new_node_num(expect_number());
+}
+
+LVar *find_lvar(Token *tok) {
+  for (LVar *var = locals; var; var = var->next)
+    if (var->len == tok->len && !memcmp(tok->str, var->name, var->len))
+      return var;
+  return NULL;
 }

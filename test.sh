@@ -44,5 +44,9 @@ assert 5 "a = 1; 2 + 2 + a;"
 assert 10 "a = 6; b=4; a + b;"
 assert 12 "a = 6; b=2; a * b;"
 assert 12 "z = 6; u=2; u * z;"
+assert 12 "zz = 6; uv=2; uv * zz;"
+assert 19 "zz = 6; uv=zz /2; uv * zz + 1;"
+assert 42 "abcdef = 42; abcdef;"
+assert 13 "zz = 6; uv=zz /2; zz=4; uv * zz + 1;"
 
 echo OK
