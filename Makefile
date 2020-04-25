@@ -3,7 +3,7 @@ SRCS=$(wildcard *.c)
 OBJS=$(SRCS:.c=.o)
 
 toycc: $(OBJS)
-	$(CC) -o toycc $(OBJS) $(LDFLAGS)
+	$(CC) -Wall -o toycc $(OBJS) $(LDFLAGS)
 
 $(OBJS): toycc.h
 

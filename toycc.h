@@ -3,6 +3,7 @@
 typedef enum {
   TK_RESERVED, // symbol
   TK_IDENT, // identifier
+  TK_RETURN, // return
   TK_NUM,      // integer
   TK_EOF,      // end of file
 } TokenKind;
@@ -31,6 +32,7 @@ typedef enum {
   ND_GT,  // >
   ND_GTE, // >=
   ND_NUM, // integer
+  ND_RETURN, // return
 } NodeKind;
 
 typedef struct Node Node;
@@ -66,6 +68,7 @@ Token *consume_ident();
 void expect(char op);
 int expect_number();
 bool at_eof();
+bool is_alnum(char c);
 Token *new_token(TokenKind kind, Token *cur, char **str, int len);
 bool two_char_token(char *p);
 bool one_char_token(char *p);

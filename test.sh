@@ -48,5 +48,8 @@ assert 12 "zz = 6; uv=2; uv * zz;"
 assert 19 "zz = 6; uv=zz /2; uv * zz + 1;"
 assert 42 "abcdef = 42; abcdef;"
 assert 13 "zz = 6; uv=zz /2; zz=4; uv * zz + 1;"
+assert 2 "return 2;"
+assert 13 "zz = 6; uv=zz /2; zz=4; return uv * zz + 1; 99;"
+assert 21 "abc=42; return abc / 2; z = 4; return z;"
 
 echo OK
